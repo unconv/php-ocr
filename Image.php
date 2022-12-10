@@ -12,4 +12,10 @@ class Image
         imagedestroy( $image );
         return ob_get_clean();
     }
+
+    public static function get_color( GdImage $image, int $x, int $y, $color = "red" ){
+        $color_index = imagecolorat( $image, $x, $y );
+        $colors = imagecolorsforindex( $image, $color_index );
+        return $colors[$color];
+    }
 }

@@ -5,8 +5,18 @@ spl_autoload_register( function( $class ) {
 
 $generator = new CharacterImageGenerator();
 
-$f = imagecreatefrompng( "r_letter.png" );
-$f = $generator->trim( $f );
-$a = new LetterData( $f );
+$read_this = imagecreatefrompng( "read_this.png" );
+//$read_this = $generator->trim( $read_this );
 
-echo LetterData::which( $a ).PHP_EOL;
+$reader = new TextReader();
+$lines = $reader->lines_to_images( $read_this );
+
+$num = 0;
+
+foreach( $lines as $line ) {
+    $letters = $reader->line_to_letters( $line );
+    foreach( $letters as $letter ) {
+        Image::save_to_file( $letter, "letter-images/".$num.".png" );
+        $num++;
+    }
+}
