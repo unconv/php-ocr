@@ -3,6 +3,7 @@ class LetterData
 {
     private int $accuracy = 30;
     private array $data;
+    private static array $refernce_data;
 
     public function __construct( GdImage $image )
     {
@@ -85,12 +86,17 @@ class LetterData
      * @return LetterData[]
      */
     static function generate_reference_material(): array {
+        if( isset( static::$refernce_data ) ) {
+            return static::$refernce_data;
+        }
+
         $all_letters = [];
 
         $generator = new CharacterImageGenerator();
 
-        for( $i = 65; $i < 65 + 26; $i++ ) {
-            $letter = chr( $i );
+        $characters = str_split( "QWERTYUIOPASDFGHJKLZXCVBNM0987654321" );
+
+        foreach( $characters as $letter ) {
             $gdimage = $generator->generate( $letter );
             ob_start();
             imagepng( $gdimage );
@@ -99,6 +105,8 @@ class LetterData
             $letter_data = new LetterData( $gdimage );
             $all_letters[$letter] = $letter_data;
         }
+
+        static::$refernce_data = $all_letters;
 
         return $all_letters;
     }
