@@ -112,7 +112,7 @@ class TextReader
      * Turns image of a line of text into images of letters
      *
      * @param GdImage $image
-     * @return GdImage[]
+     * @return array
      */
     public function line_to_letters( GdImage $image ): array {
         $letters = $this->get_letters( $image );
@@ -121,8 +121,44 @@ class TextReader
 
         $letter_images = [];
 
-        foreach( $letters as $letter_data ) {
+        foreach( $letters as $i => $letter_data ) {
             $width = $letter_data['end'] - $letter_data['start'];
+
+            $previous = $letters[$i-1] ?? null;
+            if( $previous ) {
+                $space = $letter_data['start'] - $previous['end'];
+            } else {
+                $space = 0;
+            }
+
+            if( $space > 6 ) {
+                $space = " ";
+            } else {
+                $space = "";
+            }
+
+            // if letter is too wide
+            if( $width > 24 ) {
+                // cut letter in half
+                $width = intval( $width / 2 );
+
+                // cut first part of letter
+                $letter_image = imagecrop( $image, [
+                    "x" => $letter_data['start'],
+                    "y" => 0,
+                    "width" => $width,
+                    "height" => $height
+                ] );
+
+                // add letter to output array
+                $letter_images[] = [
+                    "image" => $letter_image,
+                    "space" => $space,
+                ];
+
+                // move start position
+                $letter_data['start'] += $width;
+            }
 
             $letter_image = imagecrop( $image, [
                 "x" => $letter_data['start'],
@@ -131,7 +167,10 @@ class TextReader
                 "height" => $height
             ] );
 
-            $letter_images[] = $letter_image;
+            $letter_images[] = [
+                "image" => $letter_image,
+                "space" => $space,
+            ];
         }
 
         return $letter_images;
