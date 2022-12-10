@@ -24,19 +24,10 @@ class CharacterImageGenerator
         $image = Image::get_blob( $im );
 
         // trim white borders from image
-        $im = new Imagick();
-        $im->readImageBlob( $image );
-        $im->trimImage( 0 );
+        $im2 = new Imagick();
+        $im2->readImageBlob( $image );
+        $im2->trimImage( 0 );
 
-        // write image to file
-        $filename = tempnam( "/tmp", "image" );
-        $im->writeImage( $filename );
-
-        // read image from file
-        $output = imagecreatefrompng( $filename );
-
-        unlink( $filename );
-
-        return $output;
+        return imagecreatefromstring( (string) $im2 );
     }
 }
