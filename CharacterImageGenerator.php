@@ -3,12 +3,12 @@ class CharacterImageGenerator
 {
     public function generate( string $letter, int $size = 30 ): GdImage {
         // initialize image
-        $im = imagecreatetruecolor( $size+20, $size );
+        $im = imagecreatetruecolor( $size*3, $size*3 );
 
         // initialize colors
         $white = imagecolorallocate( $im, 255, 255, 255 );
         $black = imagecolorallocate( $im, 0, 0, 0 );
-        imagefilledrectangle( $im, 0, 0, $size+20, $size, $white );
+        imagefilledrectangle( $im, 0, 0, $size*3, $size*3, $white );
 
         // Replace path by your own font path
         $font = './arial.ttf';
