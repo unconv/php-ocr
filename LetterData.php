@@ -7,6 +7,8 @@ class LetterData
 
     public function __construct( GdImage $image )
     {
+        $image = Image::trim( $image );
+
         $image = Image::resize(
             image: $image,
             width: LetterData::ACCURACY,
