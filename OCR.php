@@ -15,12 +15,29 @@ class OCR
                 $letter_image = $letter['image'];
                 $space = $letter['space'];
                 $letter_data = new LetterData( $letter_image );
-                $which = LetterData::which( $letter_data );
+                $which = OCR::which( $letter_data );
                 $output .= $space.$which;
             }
             $output .= PHP_EOL;
         }
 
         return rtrim( $output );
+    }
+
+    public static function which( LetterData $letter ): string|null {
+        $refernce_data = LetterData::generate_reference_material();
+
+        $best_guess = null;
+        $best_score = 0;
+
+        foreach( $refernce_data as $letter_name => $reference_letter ) {
+            $score = $reference_letter->compare( $letter );
+            if( $score > $best_score ) {
+                $best_guess = $letter_name;
+                $best_score = $score;
+            }
+        }
+
+        return $best_guess;
     }
 }
