@@ -123,4 +123,119 @@ class LetterData
     public function get_image(): GdImage {
         return $this->image;
     }
+
+    public function has_black_line_through() {
+        $image = $this->get_image();
+
+        $width = imagesx( $image );
+        $height = imagesy( $image );
+
+        for( $y = 0; $y < $height; $y++ ) {
+            $black_pixels = 0;
+            for( $x = 0; $x < $width; $x++ ) {
+                $color = Image::get_color( $image, $x, $y );
+                $is_black = $color <= LetterData::COLOR_ACCURACY;
+                if( $is_black ) {
+                    $black_pixels++;
+                }
+            }
+            if( $black_pixels / $width > 0.9 ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function has_white_line_through() {
+        $image = $this->get_image();
+
+        $width = imagesx( $image );
+        $height = imagesy( $image );
+
+        for( $y = 0; $y < $height; $y++ ) {
+            $white_pixels = 0;
+            for( $x = 0; $x < $width; $x++ ) {
+                $color = Image::get_color( $image, $x, $y );
+                $is_white = $color > 140;
+                if( $is_white ) {
+                    $white_pixels++;
+                }
+            }
+            if( $white_pixels === $width ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function black_percentage() {
+        $image = $this->get_image();
+
+        $width = imagesx( $image );
+        $height = imagesy( $image );
+
+        $black_pixels = 0;
+
+        for( $y = 0; $y < $height; $y++ ) {
+            for( $x = 0; $x < $width; $x++ ) {
+                $color = Image::get_color( $image, $x, $y );
+                $is_black = $color <= LetterData::COLOR_ACCURACY;
+                if( $is_black ) {
+                    $black_pixels++;
+                }
+            }
+        }
+
+        return $black_pixels / ( $width * $height ) * 100;
+    }
+
+    public function has_top_serif() {
+        $image = $this->get_image();
+
+        $width = imagesx( $image );
+        $height = imagesy( $image );
+
+        if( $height < 5 ) {
+            return false;
+        }
+
+        for( $y = 0; $y < 5; $y++ ) {
+            $black_pixels = 0;
+            for( $x = 0; $x < $width; $x++ ) {
+                $color = Image::get_color( $image, $x, $y );
+                $is_black = $color <= LetterData::COLOR_ACCURACY;
+                if( $is_black ) {
+                    $black_pixels++;
+                }
+            }
+            if( $black_pixels / $width > 0.4 ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function has_left_vertical_line() {
+        $image = $this->get_image();
+
+        $height = imagesy( $image );
+
+        for( $y = 0; $y < $height; $y++ ) {
+            $black_pixels = 0;
+            $color = Image::get_color( $image, 0, $y );
+            $is_black = $color <= LetterData::COLOR_ACCURACY;
+            if( $is_black ) {
+                $black_pixels++;
+            }
+        }
+
+        if( $black_pixels / $height > 0.9 ) {
+            return true;
+        }
+
+        return false;
+    }
 }

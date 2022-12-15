@@ -75,6 +75,46 @@ class OCR
             }
         }
 
+        if( ! $letter->has_top_serif() ) {
+            if( in_array( $best_guess, ["f"] ) ) {
+                $best_guess = "t";
+                $best_score *= 1.1;
+            }
+        }
+
+        if( ! $letter->has_left_vertical_line() ) {
+            if( in_array( $best_guess, ["R"] ) ) {
+                $best_guess = "a";
+                $best_score *= 1.1;
+            }
+        }
+
+        if( $letter->has_black_line_through() ) {
+            if( in_array( $best_guess, ["o", "O", "0", "c"] ) ) {
+                $best_guess = "e";
+                $best_score *= 1.1;
+            }
+        }
+
+        if( $letter->has_white_line_through() ) {
+            if( in_array( $best_guess, ["l", "I"] ) ) {
+                $best_guess = "i";
+                $best_score *= 1.1;
+            }
+        } else {
+            if( in_array( $best_guess, ["i"] ) ) {
+                $best_guess = "l";
+                $best_score *= 1.1;
+            }
+        }
+
+        if( $letter->black_percentage() > 59 ) {
+            if( in_array( $best_guess, ["f", "1", "t"] ) ) {
+                $best_guess = ",";
+                $best_score *= 1.1;
+            }
+        }
+
         return [
             "letter" => $best_guess,
             "score" => $best_score,
