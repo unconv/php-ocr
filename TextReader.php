@@ -141,14 +141,16 @@ class TextReader
                 $space = 0;
             }
 
-            if( $space > 6 ) {
+            if( $space > $height/4 ) {
                 $space = " ";
             } else {
                 $space = "";
             }
 
+            $too_wide = $height*1.3;
+
             // if letter is too wide
-            if( $width > 24 ) {
+            if( $width > $too_wide ) {
                 // cut letter in half
                 $width = intval( $width / 2 );
 
