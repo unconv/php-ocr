@@ -123,7 +123,7 @@ class LetterData
 
         $generator = new CharacterImageGenerator();
 
-        $characters = str_split( "QWERTYUIOPASDFGHJKLZXCVBNM0987654321" );
+        $characters = str_split( "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0987654321?" );
 
         foreach( $characters as $letter ) {
             $gdimage = $generator->generate( $letter );
