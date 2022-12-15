@@ -7,6 +7,9 @@ class LetterData
 
     public function __construct( GdImage $image )
     {
+        imagefilter( $image, IMG_FILTER_GRAYSCALE );
+        imagefilter( $image, IMG_FILTER_CONTRAST, -100 );
+
         $image = Image::trim( $image );
 
         $image = Image::resize(
