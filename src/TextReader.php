@@ -141,7 +141,7 @@ class TextReader
                 $space = 0;
             }
 
-            if( $space > $height/4 ) {
+            if( $space > $height/3.5 ) {
                 $space = " ";
             } else {
                 $space = "";
