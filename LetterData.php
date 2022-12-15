@@ -2,6 +2,7 @@
 class LetterData
 {
     public const ACCURACY = 20;
+    public const COLOR_ACCURACY = 80;
     private array $data;
     private static array $refernce_data;
 
@@ -35,27 +36,50 @@ class LetterData
         $this_data = $this->data;
         $that_data = $letter->data;
 
-        $total_error = 0;
+        $total_pixels = count( $this_data ) + count( $that_data );
 
-        foreach( $this_data as $index => $color ) {
-            $error = abs( $color - $that_data[$index] );
-            $total_error += $error;
+        // compare reference letter to read letter
+        $different_pixels = $this->count_pixel_diff( $this_data, $that_data );
+
+        // compare read letter to reference letter
+        $different_pixels += $this->count_pixel_diff( $that_data, $this_data );
+
+        $score = 100 - $different_pixels / $total_pixels * 100;
+
+        return $score;
+    }
+
+    private function count_pixel_diff( array $data1, array $data2 ) {
+        $different_pixels = 0;
+
+        foreach( $data1 as $index => $color ) {
+            if( ! isset( $data2[$index] ) ) {
+                $different_pixels++;
+                continue;
+            }
+
+            $data1_is_black = $color <= LetterData::COLOR_ACCURACY;
+            $data2_is_black = $data2[$index] <= LetterData::COLOR_ACCURACY;
+
+            if( $data1_is_black != $data2_is_black ) {
+                $different_pixels++;
+            }
         }
 
-        return $total_error;
+        return $different_pixels;
     }
 
     public static function which( LetterData $letter ): string|null {
         $refernce_data = static::generate_reference_material();
 
         $best_guess = null;
-        $best_error = 999999;
+        $best_score = 0;
 
         foreach( $refernce_data as $letter_name => $reference_letter ) {
-            $error = $reference_letter->compare( $letter );
-            if( $error < $best_error ) {
+            $score = $reference_letter->compare( $letter );
+            if( $score > $best_score ) {
                 $best_guess = $letter_name;
-                $best_error = $error;
+                $best_score = $score;
             }
         }
 
