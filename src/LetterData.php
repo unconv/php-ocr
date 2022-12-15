@@ -110,10 +110,6 @@ class LetterData
 
         foreach( $characters as $letter ) {
             $gdimage = $generator->generate( $letter, $font_filename );
-            ob_start();
-            imagepng( $gdimage );
-            $image_source = ob_get_clean();
-            file_put_contents( "letters/".$letter.".png", $image_source );
             $letter_data = new LetterData( $gdimage );
             $all_letters[$letter] = $letter_data;
         }
