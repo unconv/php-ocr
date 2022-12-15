@@ -7,17 +7,19 @@ class LetterData
 
     public function __construct( GdImage $image )
     {
-        $small_image = Image::resize(
+        $image = Image::resize(
             image: $image,
             width: LetterData::ACCURACY,
-            height: LetterData::ACCURACY
         );
 
         $this->data = [];
 
-        for( $y = 0; $y < LetterData::ACCURACY; $y++ ) {
-            for( $x = 0; $x < LetterData::ACCURACY; $x++ ) {
-                $colors = imagecolorat( $small_image, $x, $y );
+        $width = imagesx( $image );
+        $height = imagesy( $image );
+
+        for( $y = 0; $y < $height; $y++ ) {
+            for( $x = 0; $x < $width; $x++ ) {
+                $colors = imagecolorat( $image, $x, $y );
                 $color = ($colors >> 16) & 0xFF;
                 $this->data[] = $color;
             }
