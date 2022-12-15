@@ -130,6 +130,10 @@ class OCR
         foreach( $words as $word ) {
             $letters = str_split( $word );
 
+            if( $word === "l" ) {
+                $word = "I";
+            }
+
             $lowercase_letter_count = 0;
             $uppercase_letter_count = 0;
             foreach( $letters as $letter ) {
