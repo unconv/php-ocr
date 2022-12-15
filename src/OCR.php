@@ -13,7 +13,7 @@ class OCR
             if( $data['score'] > $best_score ) {
                 $best_score = $data['score'];
                 $best_font = basename( $font_filename );
-                $best_text = $data['output'];
+                $best_text = $data['autocorrected'];
             }
         }
 
