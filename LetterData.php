@@ -7,7 +7,7 @@ class LetterData
 
     public function __construct( GdImage $image )
     {
-        $small_image = $this->resize_image(
+        $small_image = Image::resize(
             image: $image,
             width: $this->accuracy,
             height: $this->accuracy
@@ -22,31 +22,6 @@ class LetterData
                 $this->data[] = $color;
             }
         }
-    }
-
-    private function resize_image( GdImage $image, int $width, int $height ): GdImage {
-        // initialize small image
-        $resized_image = imagecreatetruecolor( $width, $height );
-
-        // get original image width and height
-        $orig_width = imagesx( $image );
-        $orig_height = imagesy( $image );
-
-        // resize image
-        imagecopyresized(
-            dst_image: $resized_image,
-            src_image: $image,
-            dst_x: 0,
-            dst_y: 0,
-            src_x: 0,
-            src_y: 0,
-            dst_width: $width,
-            dst_height: $height,
-            src_width: $orig_width,
-            src_height: $orig_height,
-        );
-
-        return $resized_image;
     }
 
     public function compare( LetterData $letter ) {

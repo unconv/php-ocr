@@ -21,6 +21,42 @@ class Image
         return $colors[$color];
     }
 
+    public static function resize( GdImage $image, ?int $width = null, ?int $height = null ): GdImage {
+        // get original image width and height
+        $orig_width = imagesx( $image );
+        $orig_height = imagesy( $image );
+
+        // calculate width and height
+        if( $width === null ) {
+            $ratio = $height/$orig_height;
+            $width = $orig_width*$ratio;
+        }
+
+        if( $height === null ) {
+            $ratio = $width/$orig_width;
+            $height = $orig_height*$ratio;
+        }
+
+        // initialize small image
+        $resized_image = imagecreatetruecolor( $width, $height );
+
+        // resize image
+        imagecopyresized(
+            dst_image: $resized_image,
+            src_image: $image,
+            dst_x: 0,
+            dst_y: 0,
+            src_x: 0,
+            src_y: 0,
+            dst_width: $width,
+            dst_height: $height,
+            src_width: $orig_width,
+            src_height: $orig_height,
+        );
+
+        return $resized_image;
+    }
+
     public static function trim( GdImage $image ): GdImage {
         $width = imagesx( $image );
         $height = imagesy( $image );
