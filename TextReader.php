@@ -1,7 +1,7 @@
 <?php
 class TextReader
 {
-    private int $color_accuracy = 0;
+    private int $color_accuracy = 80;
 
     public function get_lines( GdImage $image ): array {
         $width = imagesx( $image );
