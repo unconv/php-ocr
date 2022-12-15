@@ -76,6 +76,16 @@ class TextReader
             }
         }
 
+        // read last letter
+        if( $letter_start !== null ) {
+            $letter_end = $x;
+            $letters[] = [
+                "start" => $letter_start,
+                "end" => $letter_end,
+            ];
+            $letter_start = null;
+        }
+
         return $letters;
     }
 
