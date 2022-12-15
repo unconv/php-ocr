@@ -147,7 +147,9 @@ class OCR
 
             $is_ucfirst = ucfirst( $word ) === $word;
 
-            if( $lowercase_letter_count / mb_strlen( $word ) >= 0.5 ) {
+            $word_length = mb_strlen( $word );
+
+            if( $lowercase_letter_count / $word_length >= 0.5 ) {
                 $word = str_replace( [
                     "0",
                     "1",
@@ -158,10 +160,12 @@ class OCR
                     "s",
                 ], $word );
 
+                $is_ucfirst = ucfirst( $word ) === $word;
+
                 $word = mb_strtolower( $word );
             }
 
-            if( $uppercase_letter_count / mb_strlen( $word ) >= 0.5 ) {
+            if( $uppercase_letter_count / $word_length >= 0.6 ) {
                 $word = str_replace( [
                     "0",
                     "1",
@@ -171,6 +175,8 @@ class OCR
                     "I",
                     "S",
                 ], $word );
+
+                $word = mb_strtoupper( $word );
             }
 
             if( $is_ucfirst ) {
