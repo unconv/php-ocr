@@ -1,7 +1,7 @@
 <?php
 class LetterData
 {
-    private int $accuracy = 30;
+    public const ACCURACY = 20;
     private array $data;
     private static array $refernce_data;
 
@@ -9,14 +9,14 @@ class LetterData
     {
         $small_image = Image::resize(
             image: $image,
-            width: $this->accuracy,
-            height: $this->accuracy
+            width: LetterData::ACCURACY,
+            height: LetterData::ACCURACY
         );
 
         $this->data = [];
 
-        for( $y = 0; $y < $this->accuracy; $y++ ) {
-            for( $x = 0; $x < $this->accuracy; $x++ ) {
+        for( $y = 0; $y < LetterData::ACCURACY; $y++ ) {
+            for( $x = 0; $x < LetterData::ACCURACY; $x++ ) {
                 $colors = imagecolorat( $small_image, $x, $y );
                 $color = ($colors >> 16) & 0xFF;
                 $this->data[] = $color;
