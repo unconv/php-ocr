@@ -1,7 +1,7 @@
 <?php
 class LetterData
 {
-    public const ACCURACY = 20;
+    public const ACCURACY = 40;
     public const COLOR_ACCURACY = 80;
     private array $data;
     private static array $refernce_data;
