@@ -1,7 +1,7 @@
 <?php
 class CharacterImageGenerator
 {
-    public function generate( string $letter, int $size = 30 ): GdImage {
+    public function generate( string $letter, int $size = 40 ): GdImage {
         // initialize image
         $im = imagecreatetruecolor( $size*3, $size*3 );
 
