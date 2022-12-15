@@ -54,6 +54,7 @@ class OCR
 
         return [
             "output" => $output,
+            "autocorrected" => OCR::autocorrect( $output ),
             "score" => $score / $letter_count,
         ];
     }
@@ -76,5 +77,62 @@ class OCR
             "letter" => $best_guess,
             "score" => $best_score,
         ];
+    }
+
+    public static function autocorrect( string $text ) {
+        $words = explode( " ", $text );
+
+        $output = [];
+
+        foreach( $words as $word ) {
+            $letters = str_split( $word );
+
+            $lowercase_letter_count = 0;
+            $uppercase_letter_count = 0;
+            foreach( $letters as $letter ) {
+                if( mb_strtolower( $letter ) === $letter && preg_replace( '/[0-9]/', '', $letter ) === $letter ) {
+                    $lowercase_letter_count++;
+                }
+                if( mb_strtoupper( $letter ) === $letter && preg_replace( '/[0-9]/', '', $letter ) === $letter ) {
+                    $uppercase_letter_count++;
+                }
+            }
+
+            $is_ucfirst = ucfirst( $word ) === $word;
+
+            if( $lowercase_letter_count / mb_strlen( $word ) >= 0.5 ) {
+                $word = str_replace( [
+                    "0",
+                    "1",
+                    "5",
+                ], [
+                    "o",
+                    "l",
+                    "s",
+                ], $word );
+
+                $word = mb_strtolower( $word );
+            }
+
+            if( $uppercase_letter_count / mb_strlen( $word ) >= 0.5 ) {
+                $word = str_replace( [
+                    "0",
+                    "1",
+                    "5",
+                ], [
+                    "O",
+                    "I",
+                    "S",
+                ], $word );
+            }
+
+            if( $is_ucfirst ) {
+                $word = ucfirst( $word );
+            }
+
+            $output[] = $word;
+        }
+
+        return implode( " ", $output );
     }
 }
