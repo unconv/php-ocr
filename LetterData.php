@@ -5,18 +5,23 @@ class LetterData
     public const COLOR_ACCURACY = 80;
     private array $data;
     private static array $refernce_data;
+    private GdImage $image;
 
-    public function __construct( GdImage $image )
+    public function __construct( GdImage $image, bool $filter = true )
     {
-        imagefilter( $image, IMG_FILTER_GRAYSCALE );
-        imagefilter( $image, IMG_FILTER_CONTRAST, -100 );
+        if( $filter ) {
+            imagefilter($image, IMG_FILTER_GRAYSCALE);
+            imagefilter($image, IMG_FILTER_CONTRAST, -100);
 
-        $image = Image::trim( $image );
+            $image = Image::trim( $image );
 
-        $image = Image::resize(
-            image: $image,
-            width: LetterData::ACCURACY,
-        );
+            $image = Image::resize(
+                image: $image,
+                width: LetterData::ACCURACY,
+            );
+        }
+
+        $this->image = $image;
 
         $this->data = [];
 
@@ -34,6 +39,24 @@ class LetterData
 
     public function compare( LetterData $letter ) {
         $this_data = $this->data;
+        $this_image = $this->get_image();
+
+        $this_height = imagesy( $this_image );
+        $that_height = imagesy( $letter->get_image() );
+        $height_diff = abs( $this_height - $that_height );
+        $diff_percent = round( $height_diff / $this_height, 1 );
+
+        if( $diff_percent <= 0.2 ) {
+            $this_image = Image::resize(
+                image: $this->get_image(),
+                width: imagesx( $letter->get_image() ),
+                height: $that_height
+            );
+
+            $this_letterdata = new LetterData( $this_image, false );
+            $this_data = $this_letterdata->get_data();
+        }
+
         $that_data = $letter->data;
 
         $total_pixels = count( $this_data ) + count( $that_data );
@@ -119,5 +142,9 @@ class LetterData
 
     public function get_data(): array {
         return $this->data;
+    }
+
+    public function get_image(): GdImage {
+        return $this->image;
     }
 }
