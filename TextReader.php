@@ -168,6 +168,9 @@ class TextReader
                     "space" => $space,
                 ];
 
+                // reset space
+                $space = "";
+
                 // move start position
                 $letter_data['start'] += $width;
             }
