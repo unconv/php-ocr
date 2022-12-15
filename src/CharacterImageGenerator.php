@@ -13,6 +13,9 @@ class CharacterImageGenerator
         // add letter to image
         imagettftext( $im, $size-1, 0, 0, $size-1, $black, $font_filename, $letter );
 
+        imagefilter( $im, IMG_FILTER_GRAYSCALE );
+        imagefilter( $im, IMG_FILTER_CONTRAST, -100 );
+
         $im = Image::trim( $im );
 
         return $im;

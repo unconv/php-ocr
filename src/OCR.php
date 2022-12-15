@@ -26,6 +26,8 @@ class OCR
 
     public function read_by_font( string $filename, string $font_filename ): array {
         $read_this = imagecreatefrompng( $filename );
+        imagefilter( $read_this, IMG_FILTER_GRAYSCALE );
+        imagefilter( $read_this, IMG_FILTER_CONTRAST, -100 );
 
         $reader = new TextReader();
         $lines = $reader->lines_to_images( $read_this );
