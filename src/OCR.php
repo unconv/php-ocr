@@ -32,31 +32,32 @@ class OCR
         $reader = new TextReader();
         $lines = $reader->lines_to_images( $read_this );
 
-        $output = "";
+        $output = [];
 
         $score = 0;
         $letter_count = 0;
 
         foreach( $lines as $line ) {
             $letters = $reader->line_to_letters( $line );
+            $line_text = "";
             foreach( $letters as $letter ) {
                 $letter_image = $letter['image'];
                 $space = $letter['space'];
                 $letter_data = new LetterData( $letter_image );
                 $which = OCR::which( $letter_data, $font_filename );
-                $output .= $space.$which['letter'];
+                $line_text .= $space.$which['letter'];
 
                 $score += $which['score'];
                 $letter_count++;
             }
-            $output .= PHP_EOL;
+            $output[] = $line_text;
         }
 
-        $output = rtrim( $output );
+        $autocorrected = array_map( "OCR::autocorrect", $output );
 
         return [
             "output" => $output,
-            "autocorrected" => OCR::autocorrect( $output ),
+            "autocorrected" => $autocorrected,
             "score" => $score / $letter_count,
         ];
     }

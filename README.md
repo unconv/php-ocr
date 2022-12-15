@@ -19,7 +19,7 @@ $ocr = new OCR();
 // read text automatically
 $data = $ocr->read( "example-text/text-ubuntu.png" );
 
-// get text read from image
+// get text lines as an array
 echo $data['text'];
 ```
 
@@ -36,9 +36,9 @@ $data = $ocr->read_by_font(
     font_filename: "fonts/Ubuntu-Regular.ttf",
 );
 
-// get raw text read from image
+// get raw text lines as an array
 echo $data['output'];
 
-// get "autocorrected" text read from image
+// get "autocorrected" text lines as an array
 echo $data['autocorrected'];
 ```
