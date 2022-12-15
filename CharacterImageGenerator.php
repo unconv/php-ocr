@@ -1,7 +1,7 @@
 <?php
 class CharacterImageGenerator
 {
-    public function generate( string $letter, int $size = 40 ): GdImage {
+    public function generate( string $letter, string $font_filename, int $size = 40 ): GdImage {
         // initialize image
         $im = imagecreatetruecolor( $size*3, $size*3 );
 
@@ -10,11 +10,8 @@ class CharacterImageGenerator
         $black = imagecolorallocate( $im, 0, 0, 0 );
         imagefilledrectangle( $im, 0, 0, $size*3, $size*3, $white );
 
-        // Replace path by your own font path
-        $font = './arial.ttf';
-
         // add letter to image
-        imagettftext( $im, $size-1, 0, 0, $size-1, $black, $font, $letter );
+        imagettftext( $im, $size-1, 0, 0, $size-1, $black, $font_filename, $letter );
 
         $im = Image::trim( $im );
 

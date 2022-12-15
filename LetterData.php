@@ -97,9 +97,9 @@ class LetterData
      *
      * @return LetterData[]
      */
-    static function generate_reference_material(): array {
-        if( isset( static::$refernce_data ) ) {
-            return static::$refernce_data;
+    static function generate_reference_material( string $font_filename ): array {
+        if( isset( static::$refernce_data[$font_filename] ) ) {
+            return static::$refernce_data[$font_filename];
         }
 
         $all_letters = [];
@@ -109,7 +109,7 @@ class LetterData
         $characters = str_split( "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0987654321?" );
 
         foreach( $characters as $letter ) {
-            $gdimage = $generator->generate( $letter );
+            $gdimage = $generator->generate( $letter, $font_filename );
             ob_start();
             imagepng( $gdimage );
             $image_source = ob_get_clean();
@@ -118,7 +118,7 @@ class LetterData
             $all_letters[$letter] = $letter_data;
         }
 
-        static::$refernce_data = $all_letters;
+        static::$refernce_data[$font_filename] = $all_letters;
 
         return $all_letters;
     }

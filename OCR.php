@@ -1,7 +1,7 @@
 <?php
 class OCR
 {
-    public function read( string $filename ) {
+    public function read( string $filename, string $font_filename ) {
         $read_this = imagecreatefrompng( $filename );
 
         $reader = new TextReader();
@@ -15,7 +15,7 @@ class OCR
                 $letter_image = $letter['image'];
                 $space = $letter['space'];
                 $letter_data = new LetterData( $letter_image );
-                $which = OCR::which( $letter_data );
+                $which = OCR::which( $letter_data, $font_filename );
                 $output .= $space.$which;
             }
             $output .= PHP_EOL;
@@ -24,8 +24,8 @@ class OCR
         return rtrim( $output );
     }
 
-    public static function which( LetterData $letter ): string|null {
-        $refernce_data = LetterData::generate_reference_material();
+    public static function which( LetterData $letter, string $font_filename ): string|null {
+        $refernce_data = LetterData::generate_reference_material( $font_filename );
 
         $best_guess = null;
         $best_score = 0;
